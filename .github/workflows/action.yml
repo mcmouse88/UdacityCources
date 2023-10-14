@@ -1,0 +1,34 @@
+name: GitHub_Action_CI
+
+on:
+  push:
+    branches:
+      - master
+
+  pull_request:
+    branches:
+      - master
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout the code
+        uses: actions/checkout@v2
+
+      - name: Set up Java
+        uses: actions/setup-java@v2
+        with:
+          distribution: "adopt"
+          java-version: 17
+
+      - name: Lint
+        run: |
+          chmod +x ./gradlew
+          ./gradlew lintDebug
+
+      - name: Build
+        run: ./gradlew assembleRelease
+
+      - name: Run Test
+        run: ./gradlew testDebug
