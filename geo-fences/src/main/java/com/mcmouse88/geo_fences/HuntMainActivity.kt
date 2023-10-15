@@ -1,6 +1,7 @@
 package com.mcmouse88.geo_fences
 
 import android.Manifest
+import android.annotation.SuppressLint
 import android.annotation.TargetApi
 import android.app.PendingIntent
 import android.content.Intent
@@ -259,6 +260,7 @@ class HuntMainActivity : AppCompatActivity() {
      * no more geofences, we remove the geofence and let the viewmodel know that the ending hint
      * is now "active."
      */
+    @SuppressLint("MissingPermission")
     private fun addGeofenceForClue() {
         if (viewModel.geofenceIsActive()) return
         val currentGeofenceIndex = viewModel.nextGeofenceIndex()
@@ -269,43 +271,68 @@ class HuntMainActivity : AppCompatActivity() {
         }
 
         val currentGeofenceData = GeofencingConstants.LANDMARK_DATA[currentGeofenceIndex]
+
+        // Build the Geofence Object
         val geofence = Geofence.Builder()
+            // Set the request ID, string to identify the geofence.
             .setRequestId(currentGeofenceData.id)
+            // Set the circular region of this geofence.
             .setCircularRegion(
                 currentGeofenceData.latLong.latitude,
                 currentGeofenceData.latLong.longitude,
                 GeofencingConstants.GEOFENCE_RADIUS_IN_METERS
             )
+            // Set the expiration duration of the geofence. This geofence gets
+            // automatically removed after this period of time.
             .setExpirationDuration(GeofencingConstants.GEOFENCE_EXPIRATION_IN_MILLISECONDS)
+            // Set the transition types of interest. Alerts are only generated for these
+            // transition. We track entry and exit transitions in this sample.
             .setTransitionTypes(Geofence.GEOFENCE_TRANSITION_ENTER)
             .build()
 
+        // Build the geofence request
         val geofencingRequest = GeofencingRequest.Builder()
+            // The INITIAL_TRIGGER_ENTER flag indicates that geofencing service should trigger a
+            // GEOFENCE_TRANSITION_ENTER notification when the geofence is added and if the device
+            // is already inside that geofence.
             .setInitialTrigger(GeofencingRequest.INITIAL_TRIGGER_ENTER)
+            // Add the geofences to be monitored by geofencing service.
             .addGeofence(geofence)
             .build()
 
+        // First, remove any existing geofences that use our pending intent
         geofencingClient.removeGeofences(geofencePendingIntent).run {
+            // Regardless of success/failure of the removal, add the new geofence
             addOnCompleteListener {
-                Toast.makeText(
-                    this@HuntMainActivity,
-                    R.string.geofences_added,
-                    Toast.LENGTH_SHORT
-                ).show()
+                // Add the new geofence request with the new geofence
+                geofencingClient.addGeofences(geofencingRequest, geofencePendingIntent).run {
 
-                Log.e("Add Geofence", geofence.requestId)
-                viewModel.geofenceActivated()
-            }
+                    addOnSuccessListener {
+                        // Geofences added.
+                        Toast.makeText(
+                            this@HuntMainActivity,
+                            R.string.geofences_added,
+                            Toast.LENGTH_SHORT
+                        ).show()
 
-            addOnFailureListener { exception ->
-                Toast.makeText(
-                    this@HuntMainActivity,
-                    R.string.geofences_not_added,
-                    Toast.LENGTH_SHORT
-                ).show()
+                        Log.e("Add Geofence", geofence.requestId)
+                        // Tell the viewmodel that we've reached the end of the game and
+                        // activated the last "geofence" --- by removing the Geofence.
+                        viewModel.geofenceActivated()
+                    }
 
-                exception.message?.let { message ->
-                    Log.w(TAG, message)
+                    addOnFailureListener { exception ->
+                        // Failed to add geofences.
+                        Toast.makeText(
+                            this@HuntMainActivity,
+                            R.string.geofences_not_added,
+                            Toast.LENGTH_SHORT
+                        ).show()
+
+                        exception.message?.let { message ->
+                            Log.w(TAG, message)
+                        }
+                    }
                 }
             }
         }
@@ -316,8 +343,23 @@ class HuntMainActivity : AppCompatActivity() {
      * permission.
      */
     private fun removeGeofences() {
-        // TODO: Step 12 add in code to remove the geofences
+        if (foregroundAndBackgroundLocationPermissionApproved().not()) return
+        geofencingClient.removeGeofences(geofencePendingIntent).run {
+            addOnSuccessListener {
+                Log.d(TAG, getString(R.string.geofences_removed))
+                Toast.makeText(
+                    applicationContext,
+                    R.string.geofences_removed,
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
+
+            addOnFailureListener {
+                Log.d(TAG, getString(R.string.geofences_not_removed))
+            }
+        }
     }
+
     companion object {
         internal const val ACTION_GEOFENCE_EVENT =
             "HuntMainActivity.treasureHunt.action.ACTION_GEOFENCE_EVENT"
