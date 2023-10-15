@@ -16,5 +16,5 @@ dependencyResolutionManagement {
 }
 
 rootProject.name = "UdacityCourses"
-include(":app")
+include(":geo-fences")
  
