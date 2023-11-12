@@ -1,6 +1,8 @@
 package com.mcmouse88.basic_testing.statistics
 
 import com.mcmouse88.basic_testing.data.Task
+import org.hamcrest.CoreMatchers.`is`
+import org.hamcrest.MatcherAssert
 import org.junit.Assert
 import org.junit.Test
 
@@ -11,6 +13,7 @@ class StatisticsUtilsKtTest {
 
     @Test
     fun `get active and completed stats no completed returns zero hundred`() {
+        // GIVEN a list of tasks with a single, active, tasks
         val tasks = listOf(
             Task(
                 title = "title",
@@ -19,10 +22,12 @@ class StatisticsUtilsKtTest {
             )
         )
 
+        // WHEN you call getActiveAndCompletedStats
         val result = getActiveAndCompletedStats(tasks)
 
-        Assert.assertEquals(0f, result.completedTasksPercent)
-        Assert.assertEquals(100f, result.activeTasksPercent)
+        // THEN there are 0% completed tasks and 100% active tasks
+        MatcherAssert.assertThat(result.completedTasksPercent, `is`(0f))
+        MatcherAssert.assertThat(result.activeTasksPercent, `is`(100f))
     }
 
     // If there's 2 completed tasks and 3 active tasks,

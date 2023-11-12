@@ -50,10 +50,6 @@ dependencies {
     implementation(libs.androidx.appcompat)
     implementation(libs.google.android.material)
     implementation(libs.androidx.constraintlayout)
-    testImplementation(libs.junit)
-    androidTestImplementation(libs.androidx.test.ext.junit)
-    androidTestImplementation(libs.androidx.test.espresso.core)
-
     implementation(libs.androidx.cardview)
     implementation(libs.jakewharton.timber)
     implementation(libs.bundles.room)
@@ -66,4 +62,10 @@ dependencies {
     ksp(libs.androidx.lifecycle.compile)
     implementation(libs.bundles.navigation.component)
     implementation(libs.androidx.swiperefreshlayout)
+
+    testImplementation(libs.junit)
+    testImplementation(libs.hamcrest.all)
+
+    androidTestImplementation(libs.androidx.test.ext.junit)
+    androidTestImplementation(libs.androidx.test.espresso.core)
 }
