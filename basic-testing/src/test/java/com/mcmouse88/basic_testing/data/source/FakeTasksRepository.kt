@@ -16,7 +16,7 @@ class FakeTasksRepository : TasksRepository {
     }
 
     override suspend fun refreshTasks() {
-        TODO("Not yet implemented")
+        observableTasks.value = Result.Success(tasksServiceData.values.toList())
     }
 
     override fun observeTasks(): LiveData<Result<List<Task>>> {
@@ -75,7 +75,7 @@ class FakeTasksRepository : TasksRepository {
         TODO("Not yet implemented")
     }
 
-    private fun addTasks(vararg tasks: Task) {
+    fun addTasks(vararg tasks: Task) {
         for (task in tasks) {
             tasksServiceData[task.id] = task
         }

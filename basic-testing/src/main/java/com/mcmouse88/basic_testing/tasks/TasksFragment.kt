@@ -16,18 +16,23 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.snackbar.Snackbar
 import com.mcmouse88.basic_testing.EventObserver
 import com.mcmouse88.basic_testing.R
+import com.mcmouse88.basic_testing.data.Task
+import com.mcmouse88.basic_testing.data.source.DefaultTasksRepository
 import com.mcmouse88.basic_testing.databinding.TasksFragmentBinding
 import com.mcmouse88.basic_testing.util.setupRefreshLayout
 import com.mcmouse88.basic_testing.util.setupSnackbar
 import timber.log.Timber
-import com.mcmouse88.basic_testing.data.Task
 
 /**
  * Display a grid of [Task]s. User can choose to view all, active or completed tasks.
  */
 class TasksFragment : Fragment(R.layout.tasks_fragment) {
 
-    private val viewModel by viewModels<TasksViewModel>()
+    private val viewModel by viewModels<TasksViewModel> {
+        TasksViewModel.TasksViewModelFactory(
+            DefaultTasksRepository.getRepository(requireActivity().application)
+        )
+    }
 
     private val args: TasksFragmentArgs by navArgs()
 

@@ -1,11 +1,11 @@
 package com.mcmouse88.basic_testing.tasks
 
-import android.app.Application
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
-import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.map
 import androidx.lifecycle.switchMap
 import androidx.lifecycle.viewModelScope
@@ -13,18 +13,16 @@ import com.mcmouse88.basic_testing.Event
 import com.mcmouse88.basic_testing.R
 import com.mcmouse88.basic_testing.data.Result
 import com.mcmouse88.basic_testing.data.Task
-import com.mcmouse88.basic_testing.data.source.DefaultTasksRepository
-import kotlinx.coroutines.launch
 import com.mcmouse88.basic_testing.data.source.TasksDataSource
+import com.mcmouse88.basic_testing.data.source.TasksRepository
+import kotlinx.coroutines.launch
 
 /**
  * ViewModel for the task list screen.
  */
-class TasksViewModel(application: Application) : AndroidViewModel(application) {
-
-    // Note, for testing and architecture purposes, it's bad practice to construct the repository
-    // here. We'll show you how to fix this during the codelab
-    private val tasksRepository = DefaultTasksRepository.getRepository(application)
+class TasksViewModel(
+    private val tasksRepository: TasksRepository
+) : ViewModel() {
 
     private val _forceUpdate = MutableLiveData<Boolean>(false)
 
@@ -218,5 +216,14 @@ class TasksViewModel(application: Application) : AndroidViewModel(application) {
 
     fun refresh() {
         _forceUpdate.value = true
+    }
+
+    @Suppress("UNCHECKED_CAST")
+    class TasksViewModelFactory(
+        private val tasksRepository: TasksRepository
+    ) : ViewModelProvider.NewInstanceFactory() {
+        override fun <T : ViewModel> create(modelClass: Class<T>): T {
+            return TasksViewModel(tasksRepository) as T
+        }
     }
 }
