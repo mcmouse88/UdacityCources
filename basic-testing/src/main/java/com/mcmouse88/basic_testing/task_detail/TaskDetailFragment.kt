@@ -14,6 +14,7 @@ import androidx.navigation.fragment.navArgs
 import com.google.android.material.snackbar.Snackbar
 import com.mcmouse88.basic_testing.EventObserver
 import com.mcmouse88.basic_testing.R
+import com.mcmouse88.basic_testing.data.source.DefaultTasksRepository
 import com.mcmouse88.basic_testing.databinding.TaskDetailFragmentBinding
 import com.mcmouse88.basic_testing.tasks.DELETE_RESULT_OK
 import com.mcmouse88.basic_testing.util.setupRefreshLayout
@@ -27,7 +28,11 @@ class TaskDetailFragment : Fragment(R.layout.task_detail_fragment) {
 
     private val args: TaskDetailFragmentArgs by navArgs()
 
-    private val viewModel by viewModels<TaskDetailViewModel>()
+    private val viewModel by viewModels<TaskDetailViewModel> {
+        TaskDetailViewModel.TaskDetailViewModelFactory(
+            DefaultTasksRepository.getRepository(requireActivity().application)
+        )
+    }
 
     private fun setupNavigation() {
         viewModel.deleteTaskEvent.observe(viewLifecycleOwner, EventObserver {

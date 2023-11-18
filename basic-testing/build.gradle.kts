@@ -63,6 +63,9 @@ dependencies {
     implementation(libs.bundles.navigation.component)
     implementation(libs.androidx.swiperefreshlayout)
 
+    implementation(libs.androidx.fragment.testing)
+    implementation(libs.androidx.test.core)
+
     testImplementation(libs.junit)
     testImplementation(libs.hamcrest.all)
     testImplementation(libs.androidx.test.core.ktx)
@@ -71,6 +74,8 @@ dependencies {
     testImplementation(libs.androidx.arch.core.testing)
     testImplementation(libs.jetbrains.kotlinx.coroutines.test)
 
+    androidTestImplementation(libs.junit)
+    androidTestImplementation(libs.jetbrains.kotlinx.coroutines.test)
     androidTestImplementation(libs.androidx.test.ext.junit)
     androidTestImplementation(libs.androidx.test.espresso.core)
 }
