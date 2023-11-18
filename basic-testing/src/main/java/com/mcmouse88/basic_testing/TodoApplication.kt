@@ -1,6 +1,7 @@
 package com.mcmouse88.basic_testing
 
 import android.app.Application
+import com.mcmouse88.basic_testing.data.source.TasksRepository
 import timber.log.Timber
 import timber.log.Timber.DebugTree
 
@@ -11,6 +12,9 @@ import timber.log.Timber.DebugTree
  * Also, sets up Timber in the DEBUG BuildConfig. Read Timber's documentation for production setups.
  */
 class TodoApplication : Application() {
+
+    val taskRepository: TasksRepository
+        get() = ServiceLocator.provideTasksRepository(this)
 
     override fun onCreate() {
         super.onCreate()

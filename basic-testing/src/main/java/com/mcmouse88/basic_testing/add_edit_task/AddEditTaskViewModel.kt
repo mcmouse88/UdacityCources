@@ -7,9 +7,9 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.mcmouse88.basic_testing.Event
 import com.mcmouse88.basic_testing.R
+import com.mcmouse88.basic_testing.TodoApplication
 import com.mcmouse88.basic_testing.data.Result
 import com.mcmouse88.basic_testing.data.Task
-import com.mcmouse88.basic_testing.data.source.DefaultTasksRepository
 import kotlinx.coroutines.launch
 
 /**
@@ -19,7 +19,7 @@ class AddEditTaskViewModel(application: Application) : AndroidViewModel(applicat
 
     // Note, for testing and architecture purposes, it's bad practice to construct the repository
     // here. We'll show you how to fix this during the codelab
-    private val tasksRepository = DefaultTasksRepository.getRepository(application)
+    private val tasksRepository = (application as TodoApplication).taskRepository
 
     // Two-way databinding, exposing MutableLiveData
     val title = MutableLiveData<String>()

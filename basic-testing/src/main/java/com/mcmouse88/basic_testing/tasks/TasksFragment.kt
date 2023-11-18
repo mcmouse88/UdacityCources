@@ -16,8 +16,8 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.snackbar.Snackbar
 import com.mcmouse88.basic_testing.EventObserver
 import com.mcmouse88.basic_testing.R
+import com.mcmouse88.basic_testing.TodoApplication
 import com.mcmouse88.basic_testing.data.Task
-import com.mcmouse88.basic_testing.data.source.DefaultTasksRepository
 import com.mcmouse88.basic_testing.databinding.TasksFragmentBinding
 import com.mcmouse88.basic_testing.util.setupRefreshLayout
 import com.mcmouse88.basic_testing.util.setupSnackbar
@@ -30,7 +30,7 @@ class TasksFragment : Fragment(R.layout.tasks_fragment) {
 
     private val viewModel by viewModels<TasksViewModel> {
         TasksViewModel.TasksViewModelFactory(
-            DefaultTasksRepository.getRepository(requireActivity().application)
+            (requireContext().applicationContext as TodoApplication).taskRepository
         )
     }
 

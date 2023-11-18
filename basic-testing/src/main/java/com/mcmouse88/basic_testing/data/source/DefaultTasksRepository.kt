@@ -1,13 +1,8 @@
 package com.mcmouse88.basic_testing.data.source
 
-import android.app.Application
 import androidx.lifecycle.LiveData
-import androidx.room.Room
 import com.mcmouse88.basic_testing.data.Result
 import com.mcmouse88.basic_testing.data.Task
-import com.mcmouse88.basic_testing.data.source.local.TasksLocalDataSource
-import com.mcmouse88.basic_testing.data.source.local.ToDoDatabase
-import com.mcmouse88.basic_testing.data.source.remote.TasksRemoteDataSource
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.coroutineScope
@@ -22,31 +17,6 @@ class DefaultTasksRepository(
     private val tasksLocalDataSource: TasksDataSource,
     private val ioDispatcher: CoroutineDispatcher = Dispatchers.IO
 ) : TasksRepository {
-
-    companion object {
-        @Volatile
-        private var INSTANCE: DefaultTasksRepository? = null
-
-        fun getRepository(app: Application): DefaultTasksRepository {
-            return INSTANCE ?: synchronized(this) {
-                val database = Room.databaseBuilder(
-                    app,
-                    ToDoDatabase::class.java,
-                    "Tasks.db"
-                )
-                    .build()
-
-                DefaultTasksRepository(
-                    TasksRemoteDataSource,
-                    TasksLocalDataSource(
-                        database.taskDao()
-                    )
-                ).also {
-                    INSTANCE = it
-                }
-            }
-        }
-    }
 
     override suspend fun getTasks(forceUpdate: Boolean): Result<List<Task>> {
         if (forceUpdate) {
