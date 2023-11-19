@@ -12,10 +12,7 @@ interface TasksRepository {
 
     suspend fun refreshTask(taskId: String)
 
-    suspend fun updateTasksFromRemoteDataSource()
     fun observeTask(taskId: String): LiveData<Result<Task>>
-
-    suspend fun updateTaskFromRemoteDataSource(taskId: String)
 
     /**
      * Relies on [getTasks] to fetch data and picks the task with the same ID.

@@ -41,7 +41,7 @@ class DefaultTasksRepository(
         updateTaskFromRemoteDataSource(taskId)
     }
 
-    override suspend fun updateTasksFromRemoteDataSource() {
+    private suspend fun updateTasksFromRemoteDataSource() {
         val remoteTasks = tasksRemoteDataSource.getTasks()
 
         if (remoteTasks is Result.Success) {
@@ -59,7 +59,7 @@ class DefaultTasksRepository(
         return tasksLocalDataSource.observeTask(taskId)
     }
 
-    override suspend fun updateTaskFromRemoteDataSource(taskId: String) {
+    private suspend fun updateTaskFromRemoteDataSource(taskId: String) {
         val remoteTask = tasksRemoteDataSource.getTask(taskId)
 
         if (remoteTask is Result.Success) {

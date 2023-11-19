@@ -27,15 +27,7 @@ class FakeTasksRepository : TasksRepository {
         TODO("Not yet implemented")
     }
 
-    override suspend fun updateTasksFromRemoteDataSource() {
-        TODO("Not yet implemented")
-    }
-
     override fun observeTask(taskId: String): LiveData<Result<Task>> {
-        TODO("Not yet implemented")
-    }
-
-    override suspend fun updateTaskFromRemoteDataSource(taskId: String) {
         TODO("Not yet implemented")
     }
 
