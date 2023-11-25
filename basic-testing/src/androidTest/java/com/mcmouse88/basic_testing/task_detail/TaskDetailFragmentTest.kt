@@ -3,6 +3,7 @@ package com.mcmouse88.basic_testing.task_detail
 import androidx.fragment.app.testing.launchFragmentInContainer
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.assertion.ViewAssertions.matches
+import androidx.test.espresso.matcher.ViewMatchers.isChecked
 import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
 import androidx.test.espresso.matcher.ViewMatchers.isNotChecked
 import androidx.test.espresso.matcher.ViewMatchers.withId
@@ -57,5 +58,26 @@ class TaskDetailFragmentTest {
         // and make sure the "active" checkbox is shown unchecked
         onView(withId(R.id.task_detail_complete_checkbox)).check(matches(isDisplayed()))
         onView(withId(R.id.task_detail_complete_checkbox)).check(matches(isNotChecked()))
+    }
+
+    @Test
+    fun completedTaskDetails_DisplayedInUi() = runTest {
+        // GIVEN - Add completed task to the DB
+        val completeTask = Task("Completed Task", "AndroidX Rocks", true)
+        repository.saveTask(completeTask)
+
+        // WHEN - Details fragment launched to display task
+        val bundle = TaskDetailFragmentArgs(completeTask.id).toBundle()
+        launchFragmentInContainer<TaskDetailFragment>(bundle, R.style.BasicTestTheme)
+
+        // THEN - Task details are displayed on the screen
+        // make sure that the title/description are both shown and correct
+        onView(withId(R.id.task_detail_title_text)).check(matches(isDisplayed()))
+        onView(withId(R.id.task_detail_title_text)).check(matches(withText("Completed Task")))
+        onView(withId(R.id.task_detail_description_text)).check(matches(isDisplayed()))
+        onView(withId(R.id.task_detail_description_text)).check(matches(withText("AndroidX Rocks")))
+        // and make sure the "active" checkbox is shown unchecked
+        onView(withId(R.id.task_detail_complete_checkbox)).check(matches(isDisplayed()))
+        onView(withId(R.id.task_detail_complete_checkbox)).check(matches(isChecked()))
     }
 }
