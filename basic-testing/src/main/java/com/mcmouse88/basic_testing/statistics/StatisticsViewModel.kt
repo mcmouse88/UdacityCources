@@ -1,25 +1,23 @@
 package com.mcmouse88.basic_testing.statistics
 
-import android.app.Application
-import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.map
 import androidx.lifecycle.viewModelScope
-import com.mcmouse88.basic_testing.TodoApplication
 import com.mcmouse88.basic_testing.data.Result
 import com.mcmouse88.basic_testing.data.Result.Success
 import com.mcmouse88.basic_testing.data.Task
+import com.mcmouse88.basic_testing.data.source.TasksRepository
 import kotlinx.coroutines.launch
 
 /**
  * ViewModel for the statistics screen.
  */
-class StatisticsViewModel(application: Application) : AndroidViewModel(application) {
-
-    // Note, for testing and architecture purposes, it's bad practice to construct the repository
-    // here. We'll show you how to fix this during the codelab
-    private val tasksRepository = (application as TodoApplication).taskRepository
+class StatisticsViewModel(
+    private val tasksRepository: TasksRepository
+) : ViewModel() {
 
     private val tasks: LiveData<Result<List<Task>>> = tasksRepository.observeTasks()
     private val _dataLoading = MutableLiveData<Boolean>(false)
@@ -44,6 +42,15 @@ class StatisticsViewModel(application: Application) : AndroidViewModel(applicati
         viewModelScope.launch {
             tasksRepository.refreshTasks()
             _dataLoading.value = false
+        }
+    }
+
+    @Suppress("UNCHECKED_CAST")
+    class StatisticsViewModelFactory(
+        private val tasksRepository: TasksRepository
+    ) : ViewModelProvider.NewInstanceFactory() {
+        override fun <T : ViewModel> create(modelClass: Class<T>): T {
+            return StatisticsViewModel(tasksRepository) as T
         }
     }
 }
