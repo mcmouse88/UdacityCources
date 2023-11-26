@@ -81,4 +81,5 @@ dependencies {
     androidTestImplementation(libs.androidx.test.espresso.contrib)
     androidTestImplementation(libs.mockito.core)
     androidTestImplementation(libs.linkedin.dexmaker.mockito)
+    androidTestImplementation(libs.androidx.arch.core.testing)
 }
