@@ -42,6 +42,15 @@ android {
         viewBinding = true
         buildConfig = true
     }
+
+    dataBinding {
+        enableForTests = true
+    }
+
+    testOptions.unitTests {
+        isIncludeAndroidResources = true
+        isReturnDefaultValues = true
+    }
 }
 
 dependencies {
@@ -65,6 +74,7 @@ dependencies {
 
     implementation(libs.androidx.fragment.testing)
     implementation(libs.androidx.test.core)
+    implementation(libs.androidx.test.espresso.idling.resource)
 
     testImplementation(libs.junit)
     testImplementation(libs.hamcrest.all)

@@ -65,6 +65,7 @@ androidx-test-ext-junit = { module = "androidx.test.ext:junit", version = "1.1.5
 # Espresso
 androidx-test-espresso-core = { module = "androidx.test.espresso:espresso-core", version.ref = "espressoVersion" }
 androidx-test-espresso-contrib = { module = "androidx.test.espresso:espresso-contrib", version.ref = "espressoVersion" }
+androidx-test-espresso-idling-resource = { module = "androidx.test.espresso:espresso-idling-resource", version.ref = "espressoVersion" }
 
 # Mockito
 mockito-core = { module = "org.mockito:mockito-core", version = "5.5.0" }
