@@ -3,10 +3,18 @@ package com.mcmouse88.basic_testing.statistics
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.mcmouse88.basic_testing.data.source.FakeTasksRepository
 import com.mcmouse88.basic_testing.utils.MainCoroutineRule
+import com.mcmouse88.basic_testing.utils.getOrAwaitValue
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.test.runCurrent
+import kotlinx.coroutines.test.runTest
+import org.hamcrest.CoreMatchers.`is`
+import org.hamcrest.MatcherAssert
 import org.junit.Before
 import org.junit.Rule
+import org.junit.Test
 
-class StatisticsFragmentTest {
+@OptIn(ExperimentalCoroutinesApi::class)
+class StatisticsViewModelTest {
 
     @get:Rule
     var executorRule = InstantTaskExecutorRule()
@@ -22,5 +30,15 @@ class StatisticsFragmentTest {
         // Initialize the repository with no task
         tasksRepository = FakeTasksRepository()
         statisticsViewModel = StatisticsViewModel(tasksRepository)
+    }
+
+    @Test
+    fun `load tasks loading is displayed`() = runTest{
+        statisticsViewModel.refresh()
+
+        MatcherAssert.assertThat(statisticsViewModel.dataLoading.getOrAwaitValue(), `is`(true))
+        runCurrent()
+
+        MatcherAssert.assertThat(statisticsViewModel.dataLoading.getOrAwaitValue(), `is`(false))
     }
 }
