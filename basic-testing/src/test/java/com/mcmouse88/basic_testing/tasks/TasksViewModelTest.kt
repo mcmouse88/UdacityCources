@@ -5,20 +5,15 @@ import com.mcmouse88.basic_testing.Event
 import com.mcmouse88.basic_testing.R
 import com.mcmouse88.basic_testing.data.Task
 import com.mcmouse88.basic_testing.data.source.FakeTasksRepository
+import com.mcmouse88.basic_testing.utils.MainCoroutineRule
 import com.mcmouse88.basic_testing.utils.getOrAwaitValue
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.test.StandardTestDispatcher
-import kotlinx.coroutines.test.TestDispatcher
-import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.runCurrent
 import kotlinx.coroutines.test.runTest
-import kotlinx.coroutines.test.setMain
 import org.hamcrest.CoreMatchers.`is`
 import org.hamcrest.CoreMatchers.not
 import org.hamcrest.CoreMatchers.nullValue
 import org.hamcrest.MatcherAssert
-import org.junit.After
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -29,17 +24,8 @@ class TasksViewModelTest {
     @get:Rule
     var executorRule = InstantTaskExecutorRule()
 
-    private val testDispatcher: TestDispatcher = StandardTestDispatcher()
-
-    @Before
-    fun setupDispatcher() {
-        Dispatchers.setMain(testDispatcher)
-    }
-
-    @After
-    fun tearDownDispatcher() {
-        Dispatchers.resetMain()
-    }
+    @get:Rule
+    var mainCoroutineRule = MainCoroutineRule()
 
     private lateinit var tasksRepository: FakeTasksRepository
     private lateinit var tasksViewModel: TasksViewModel

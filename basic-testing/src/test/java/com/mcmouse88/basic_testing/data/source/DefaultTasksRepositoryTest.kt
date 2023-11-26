@@ -2,14 +2,20 @@ package com.mcmouse88.basic_testing.data.source
 
 import com.mcmouse88.basic_testing.data.Result
 import com.mcmouse88.basic_testing.data.Task
+import com.mcmouse88.basic_testing.utils.MainCoroutineRule
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.test.runTest
 import org.hamcrest.MatcherAssert
 import org.hamcrest.core.IsEqual
 import org.junit.Before
+import org.junit.Rule
 import org.junit.Test
 
 class DefaultTasksRepositoryTest {
+
+    @get:Rule
+    var mainCoroutineRule = MainCoroutineRule()
+
     private val task1 = Task("Title1", "Description1")
     private val task2 = Task("Title2", "Description2")
     private val task3 = Task("Title3", "Description3")
@@ -31,7 +37,7 @@ class DefaultTasksRepositoryTest {
         tasksRepository = DefaultTasksRepository(
             tasksRemoteDataSource = taskRemoteDataSource,
             tasksLocalDataSource = taskLocalDataSource,
-            ioDispatcher = Dispatchers.Unconfined
+            ioDispatcher = Dispatchers.Main
         )
     }
 
