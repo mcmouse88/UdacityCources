@@ -41,4 +41,16 @@ class StatisticsViewModelTest {
 
         MatcherAssert.assertThat(statisticsViewModel.dataLoading.getOrAwaitValue(), `is`(false))
     }
+
+    @Test
+    fun `load statistics when tasks are unavailable call error to display`() = runTest {
+        // Make the repository return errors
+        tasksRepository.setReturnsError(true)
+        statisticsViewModel.refresh()
+        runCurrent()
+
+        // Then an error message is shown
+        MatcherAssert.assertThat(statisticsViewModel.empty.getOrAwaitValue(), `is`(true))
+        MatcherAssert.assertThat(statisticsViewModel.error.getOrAwaitValue(), `is`(true))
+    }
 }
