@@ -79,4 +79,6 @@ dependencies {
     androidTestImplementation(libs.androidx.test.ext.junit)
     androidTestImplementation(libs.androidx.test.espresso.core)
     androidTestImplementation(libs.androidx.test.espresso.contrib)
+    androidTestImplementation(libs.mockito.core)
+    androidTestImplementation(libs.linkedin.dexmaker.mockito)
 }
